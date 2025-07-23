@@ -26,6 +26,13 @@ interface GitHubProjects {
    */
   automatic?: {
     /**
+     * Projects to pin at the top
+     *
+     * example: ['owner/repo1', 'owner/repo2']
+     */
+    pinned?: Array<string>;
+
+    /**
      * 'stars' | 'updated'
      */
     sortBy?: string;

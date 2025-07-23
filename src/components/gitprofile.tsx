@@ -66,7 +66,36 @@ const GitProfile = ({ config }: { config: Config }) => {
         });
         const repoData = repoResponse.data;
 
-        return repoData.items;
+        const allProjects = repoData.items;
+        const pinnedRepos = sanitizedConfig.projects.github.automatic.pinned;
+
+        if (pinnedRepos.length === 0) {
+          return allProjects;
+        }
+
+        // Separate pinned and non-pinned projects
+        const pinnedProjects: GithubProject[] = [];
+        const nonPinnedProjects: GithubProject[] = [];
+
+        allProjects.forEach((project: GithubProject) => {
+          const fullName = `${sanitizedConfig.github.username}/${project.name}`;
+          if (pinnedRepos.includes(fullName)) {
+            pinnedProjects.push(project);
+          } else {
+            nonPinnedProjects.push(project);
+          }
+        });
+
+        // Sort pinned projects according to the order in the config
+        const sortedPinnedProjects = pinnedRepos
+          .map((repoName) => {
+            const projectName = repoName.split('/')[1];
+            return pinnedProjects.find((p) => p.name === projectName);
+          })
+          .filter(Boolean) as GithubProject[];
+
+        // Combine pinned projects first, then non-pinned
+        return [...sortedPinnedProjects, ...nonPinnedProjects];
       } else {
         if (sanitizedConfig.projects.github.manual.projects.length === 0) {
           return [];
@@ -89,6 +118,7 @@ const GitProfile = ({ config }: { config: Config }) => {
       sanitizedConfig.github.username,
       sanitizedConfig.projects.github.mode,
       sanitizedConfig.projects.github.manual.projects,
+      sanitizedConfig.projects.github.automatic.pinned,
       sanitizedConfig.projects.github.automatic.sortBy,
       sanitizedConfig.projects.github.automatic.limit,
       sanitizedConfig.projects.github.automatic.exclude.forks,

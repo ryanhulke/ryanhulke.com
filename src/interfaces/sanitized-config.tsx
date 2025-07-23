@@ -7,6 +7,7 @@ export interface SanitizedGitHubProjects {
   header: string;
   mode: string;
   automatic: {
+    pinned: Array<string>;
     sortBy: string;
     limit: number;
     exclude: {

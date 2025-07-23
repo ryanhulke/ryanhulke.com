@@ -16,6 +16,9 @@ const CONFIG = {
       header: 'Projects',
       mode: 'automatic', // Mode can be: 'automatic' or 'manual'
       automatic: {
+        pinned: [
+          'ryanhulke/Chess-AI', // Always show this project first
+        ],
         sortBy: 'updated', // Sort projects by 'stars' or 'updated'
         limit: 8, // How many projects to display.
         exclude: {
